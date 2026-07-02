@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#06131b" />
+  <meta name="description" content="A modern, cinematic reimagining of the classic naval strategy game." />
+  <title>Dead Reckoning — Tactical Fleet Command</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <svg class="svg-defs" aria-hidden="true">
+    <defs>
+      <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="3.4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <linearGradient id="steel" x1="0" x2="1">
+        <stop offset="0" stop-color="#87a6ac"/>
+        <stop offset=".48" stop-color="#d8e4df"/>
+        <stop offset="1" stop-color="#607f86"/>
+      </linearGradient>
+      <linearGradient id="brass" x1="0" x2="1">
+        <stop offset="0" stop-color="#a97028"/>
+        <stop offset=".5" stop-color="#ffd48c"/>
+        <stop offset="1" stop-color="#9b6122"/>
+      </linearGradient>
+      <symbol id="icon-crosshair" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="7"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>
+      </symbol>
+      <symbol id="icon-shield" viewBox="0 0 24 24">
+        <path d="M12 3 5 6v5c0 4.7 2.7 8.1 7 10 4.3-1.9 7-5.3 7-10V6l-7-3Z"/>
+      </symbol>
+      <symbol id="icon-radar" viewBox="0 0 24 24">
+        <path d="M4.2 18.8A11 11 0 0 1 20 3M7.2 16A7 7 0 0 1 17 6m-6 7 8-8"/><circle cx="10.5" cy="13.5" r="2"/>
+      </symbol>
+      <symbol id="icon-bolt" viewBox="0 0 24 24">
+        <path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z"/>
+      </symbol>
+      <symbol id="icon-anchor" viewBox="0 0 24 24">
+        <path d="M12 7v14M5 12H2c0 5 4.5 9 10 9s10-4 10-9h-3M8 7a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="grain"></div>
+  <div class="ocean-lines"></div>
+
+  <header class="topbar">
+    <button class="brand" id="homeBtn" aria-label="Return to mission select">
+      <span class="brand-mark">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <path d="M22 3 9 9v10c0 9 5.5 16 13 20 7.5-4 13-11 13-20V9L22 3Z"/>
+          <path d="M22 10v21M15 18h14M17 28l5 3 5-3"/>
+        </svg>
+      </span>
+      <span><b>DEAD RECKONING</b><small>TACTICAL FLEET COMMAND</small></span>
+    </button>
+    <div class="top-status">
+      <span class="status-dot"></span>
+      <span>FLEETLINK <b>ONLINE</b></span>
+      <span class="divider"></span>
+      <span id="clock">21:47:03 UTC</span>
+      <button class="audio-toggle" id="audioBtn" aria-label="Toggle sound">
+        <span class="audio-bars"><i></i><i></i><i></i><i></i></span>
+        <span>SFX</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="landing" class="screen landing active">
+      <div class="hero-copy">
+        <p class="eyebrow"><span>◈</span> COMMAND AUTHORIZATION // LEVEL 5</p>
+        <h1>THE OCEAN<br><em>REMEMBERS.</em></h1>
+        <p class="hero-lede">Three ways to command. One objective: find them before they find you.</p>
+        <div class="hero-stats">
+          <div><strong>10×10</strong><small>TACTICAL GRID</small></div>
+          <div><strong>03</strong><small>COMBAT PROTOCOLS</small></div>
+          <div><strong>∞</strong><small>POSSIBLE BATTLES</small></div>
+        </div>
+      </div>
+
+      <div class="mission-panel">
+        <div class="section-heading">
+          <div>
+            <span>SELECT PROTOCOL</span>
+            <h2>Choose your theatre</h2>
+          </div>
+          <p>All fleets standing by</p>
+        </div>
+        <div class="mode-grid">
+          <article class="mode-card selected" data-mode="classic" tabindex="0">
+            <div class="card-no">01</div>
+            <div class="card-art classic-art" aria-hidden="true">
+              <svg viewBox="0 0 300 170">
+                <path class="horizon" d="M5 122C50 107 76 133 118 119s78 9 116-5 61 4 70 0"/>
+                <path class="ship-hull" d="m42 113 48-4 12-15h65l16 11 72 3-19 26H72Z"/>
+                <path class="ship-top" d="M116 94V78h43l8 16m-31-16V65m-20 8h45M102 94H82l13-11h21"/>
+                <path class="gun" d="M177 98h34m-26 0v-8h14v8"/>
+              </svg>
+            </div>
+            <div class="card-content">
+              <span class="tag">THE ORIGINAL</span>
+              <h3>CLASSIC</h3>
+              <p>Five ships. One shot per turn. Pure deduction, exactly as the admiralty intended.</p>
+              <div class="mode-meta"><span>5 SHIPS</span><span>10 × 10</span><span>NO ABILITIES</span></div>
+            </div>
+            <div class="card-select"><span>PROTOCOL SELECTED</span><b>✓</b></div>
+          </article>
+
+          <article class="mode-card" data-mode="rogue" tabindex="0">
+            <div class="card-no">02</div>
+            <div class="card-art rogue-art" aria-hidden="true">
+              <svg viewBox="0 0 300 170">
+                <g class="rogue-grid">
+                  <path d="M38 20v130M70 20v130M102 20v130M134 20v130M166 20v130M198 20v130M230 20v130M262 20v130"/>
+                  <path d="M22 38h256M22 70h256M22 102h256M22 134h256"/>
+                </g>
+                <path class="rogue-ship" d="m62 122 44-44h37l-20 20h55l31-31 27 2-48 53Z"/>
+                <path class="rogue-edge" d="m62 122 44-44h37M123 98h55l31-31"/>
+              </svg>
+            </div>
+            <div class="card-content">
+              <span class="tag">BREAK THE GRID</span>
+              <h3>ROGUE FLEET</h3>
+              <p>Diagonal hunters, hooked carriers and zig-zag vessels rewrite every assumption.</p>
+              <div class="mode-meta"><span>6 SHIPS</span><span>12 × 12</span><span>WILD SHAPES</span></div>
+            </div>
+            <div class="card-select"><span>SELECT PROTOCOL</span><b>↗</b></div>
+          </article>
+
+          <article class="mode-card" data-mode="command" tabindex="0">
+            <div class="card-no">03</div>
+            <div class="card-art command-art" aria-hidden="true">
+              <svg viewBox="0 0 300 170">
+                <circle class="radar-ring" cx="151" cy="89" r="59"/>
+                <circle class="radar-ring" cx="151" cy="89" r="38"/>
+                <circle class="radar-ring" cx="151" cy="89" r="18"/>
+                <path class="radar-sweep" d="M151 89 122 35a61 61 0 0 1 58 3Z"/>
+                <path class="radar-cross" d="M77 89h148M151 17v144"/>
+                <path class="blip" d="m102 105 5-9 5 9-5 3Zm82-48 5-9 5 9-5 3Zm18 64 5-9 5 9-5 3Z"/>
+              </svg>
+            </div>
+            <div class="card-content">
+              <span class="tag">TACTICAL EVOLUTION</span>
+              <h3>COMMANDER</h3>
+              <p>Charge the battle system and deploy sonar, torpedoes and devastating barrages.</p>
+              <div class="mode-meta"><span>5 SHIPS</span><span>ENERGY</span><span>4 WEAPONS</span></div>
+            </div>
+            <div class="card-select"><span>SELECT PROTOCOL</span><b>↗</b></div>
+          </article>
+        </div>
+        <div class="launch-row">
+          <p><span class="key">↵</span> Confirm selection</p>
+          <button class="primary-btn" id="launchBtn"><span>BEGIN DEPLOYMENT</span><b>→</b></button>
+        </div>
+      </div>
+      <div class="hero-ship" aria-hidden="true">
+        <svg viewBox="0 0 950 410">
+          <path class="wake wake-a" d="M5 350c136-28 183 20 312-6 119-24 180-65 318-47 105 13 158 40 309 17"/>
+          <path class="wake wake-b" d="M40 381c176-45 298 10 437-9 151-21 261-47 444-7"/>
+          <path class="mega-hull" d="m101 299 142-29 63-51 379-9 78 37 145 10-95 89H199Z"/>
+          <path class="mega-deck" d="M286 220h408M394 214l23-80h157l53 77M470 134V91h44v43m-22-43V49"/>
+          <path class="mega-detail" d="M316 245h353M355 245v22m62-22v22m63-22v22m63-22v22m63-22v22"/>
+          <g class="mega-guns"><path d="M626 200v-30h74v30m-60-30-44-31m85 31 45-30"/><path d="M319 213v-28h57v28m-45-28-42-29m70 29 41-30"/></g>
+          <path class="flag" d="M514 66h82l-23 15 23 15h-82Z"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="game" class="screen game-screen">
+      <div class="game-header">
+        <div>
+          <p class="eyebrow"><span>◈</span> LIVE OPERATION // <b id="operationCode">NORTHSTAR-07</b></p>
+          <h1 id="gameModeTitle">CLASSIC PROTOCOL</h1>
+        </div>
+        <div class="turn-card">
+          <span class="turn-pulse"></span>
+          <div><small>TACTICAL STATUS</small><strong id="turnLabel">YOUR TURN</strong></div>
+          <span class="turn-count">ROUND <b id="roundCount">01</b></span>
+        </div>
+      </div>
+
+      <div class="battle-layout">
+        <aside class="fleet-panel">
+          <div class="panel-label"><span>01</span> YOUR FLEET</div>
+          <div class="fleet-score"><strong id="ownAlive">5</strong><span>VESSELS<br>OPERATIONAL</span></div>
+          <div id="fleetList" class="fleet-list"></div>
+          <button class="secondary-btn" id="redeployBtn"><span>↻</span> RANDOMIZE FLEET</button>
+          <div class="intel-note">
+            <svg><use href="#icon-shield"/></svg>
+            <p><b>DEFENSIVE GRID</b><br>Enemy strikes are recorded here in real time.</p>
+          </div>
+        </aside>
+
+        <div class="boards">
+          <section class="board-wrap enemy-wrap">
+            <div class="board-title">
+              <div><span>ENEMY WATERS</span><strong>TARGETING MATRIX</strong></div>
+              <div class="signal"><i></i><i></i><i></i><i></i><span>CONTACT</span></div>
+            </div>
+            <div class="grid-shell hostile">
+              <div id="enemyLabelsTop" class="labels top"></div>
+              <div id="enemyLabelsSide" class="labels side"></div>
+              <div id="enemyGrid" class="battle-grid" aria-label="Enemy targeting grid"></div>
+              <div class="sweep-line"></div>
+              <div id="targetReticle" class="target-reticle"><i></i></div>
+            </div>
+            <p class="grid-hint"><span class="mouse-icon"></span> Select coordinates to fire</p>
+          </section>
+
+          <section class="board-wrap own-wrap">
+            <div class="board-title">
+              <div><span>FRIENDLY WATERS</span><strong>DEFENSIVE MATRIX</strong></div>
+              <span class="secure">● SECURE</span>
+            </div>
+            <div class="grid-shell friendly">
+              <div id="ownLabelsTop" class="labels top"></div>
+              <div id="ownLabelsSide" class="labels side"></div>
+              <div id="ownGrid" class="battle-grid" aria-label="Your fleet grid"></div>
+            </div>
+            <p class="grid-hint">Fleet positions encrypted</p>
+          </section>
+        </div>
+
+        <aside class="tactics-panel">
+          <div class="panel-label"><span>02</span> TACTICAL SYSTEMS</div>
+          <div id="energyBox" class="energy-box">
+            <div><span>COMMAND ENERGY</span><b id="energyValue">2 / 6</b></div>
+            <div class="energy-track" id="energyTrack"></div>
+            <small>+1 ENERGY ON HIT</small>
+          </div>
+          <div id="weapons" class="weapons"></div>
+          <div class="combat-log">
+            <div class="log-head"><span>COMBAT LOG</span><button id="clearLog">CLEAR</button></div>
+            <div id="logEntries" class="log-entries"></div>
+          </div>
+          <button class="surrender" id="surrenderBtn">ABORT OPERATION</button>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"><span class="toast-icon">◈</span><div><b id="toastTitle">DIRECT HIT</b><small id="toastText">Enemy vessel damaged at E7</small></div></div>
+
+  <div class="modal-backdrop" id="resultModal">
+    <div class="result-modal">
+      <div class="result-emblem">
+        <svg viewBox="0 0 100 100"><path d="M50 5 18 19v25c0 23 13 40 32 51 19-11 32-28 32-51V19L50 5Z"/><path d="M50 26v48M36 43h28M39 64l11 10 11-10"/></svg>
+      </div>
+      <p class="eyebrow">OPERATION COMPLETE</p>
+      <h2 id="resultTitle">DECISIVE VICTORY</h2>
+      <p id="resultText">The hostile fleet has been neutralized.</p>
+      <div class="result-stats">
+        <div><strong id="resultRounds">12</strong><span>ROUNDS</span></div>
+        <div><strong id="resultAccuracy">48%</strong><span>ACCURACY</span></div>
+        <div><strong id="resultShips">3</strong><span>SHIPS LEFT</span></div>
+      </div>
+      <div class="result-actions">
+        <button class="secondary-btn" id="menuBtn">MISSION SELECT</button>
+        <button class="primary-btn" id="rematchBtn"><span>REMATCH</span><b>↻</b></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
