@@ -25,6 +25,11 @@
         <stop offset=".5" stop-color="#ffd48c"/>
         <stop offset="1" stop-color="#9b6122"/>
       </linearGradient>
+      <linearGradient id="shipBodyGradient" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#a5c0be"/>
+        <stop offset=".38" stop-color="#547d80"/>
+        <stop offset="1" stop-color="#203e47"/>
+      </linearGradient>
       <symbol id="icon-crosshair" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="7"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>
       </symbol>
@@ -57,6 +62,10 @@
       <span><b>DEAD RECKONING</b><small>TACTICAL FLEET COMMAND</small></span>
     </button>
     <div class="top-status">
+      <button class="profile-chip" id="profileBtn" aria-label="Player profile">
+        <span class="profile-avatar">?</span>
+        <span><small>COMMANDER</small><b id="profileName">SET NAME</b></span>
+      </button>
       <span class="status-dot"></span>
       <span>FLEETLINK <b>ONLINE</b></span>
       <span class="divider"></span>
@@ -73,10 +82,10 @@
       <div class="hero-copy">
         <p class="eyebrow"><span>◈</span> COMMAND AUTHORIZATION // LEVEL 5</p>
         <h1>THE OCEAN<br><em>REMEMBERS.</em></h1>
-        <p class="hero-lede">Three ways to command. One objective: find them before they find you.</p>
+        <p class="hero-lede">Four ways to command. One objective: find them before they find you.</p>
         <div class="hero-stats">
           <div><strong>10×10</strong><small>TACTICAL GRID</small></div>
-          <div><strong>03</strong><small>COMBAT PROTOCOLS</small></div>
+          <div><strong>04</strong><small>COMBAT PROTOCOLS</small></div>
           <div><strong>∞</strong><small>POSSIBLE BATTLES</small></div>
         </div>
       </div>
@@ -124,7 +133,7 @@
             <div class="card-content">
               <span class="tag">BREAK THE GRID</span>
               <h3>ROGUE FLEET</h3>
-              <p>Diagonal hunters, hooked carriers and zig-zag vessels rewrite every assumption.</p>
+              <p>Connected stair-step hunters, hooked carriers and zig-zag vessels rewrite every assumption.</p>
               <div class="mode-meta"><span>6 SHIPS</span><span>12 × 12</span><span>WILD SHAPES</span></div>
             </div>
             <div class="card-select"><span>SELECT PROTOCOL</span><b>↗</b></div>
@@ -150,9 +159,31 @@
             </div>
             <div class="card-select"><span>SELECT PROTOCOL</span><b>↗</b></div>
           </article>
+
+          <article class="mode-card custom-card" data-mode="custom" tabindex="0">
+            <div class="card-no">04</div>
+            <div class="card-art custom-art" aria-hidden="true">
+              <svg viewBox="0 0 300 170">
+                <g class="custom-sliders">
+                  <path d="M48 47h204M48 84h204M48 121h204"/>
+                  <circle cx="101" cy="47" r="9"/><circle cx="202" cy="84" r="9"/><circle cx="136" cy="121" r="9"/>
+                </g>
+              </svg>
+            </div>
+            <div class="card-content">
+              <span class="tag">YOUR RULES</span>
+              <h3>CUSTOM</h3>
+              <p>Choose grid size, fleet composition, ship count and every tactical ability.</p>
+              <div class="mode-meta"><span>8–14 GRID</span><span>ANY FLEET</span><span>RULE EDITOR</span></div>
+            </div>
+            <div class="card-select"><span>CONFIGURE PROTOCOL</span><b>＋</b></div>
+          </article>
         </div>
         <div class="launch-row">
           <p><span class="key">↵</span> Confirm selection</p>
+          <button class="secondary-action" id="multiplayerBtn">
+            <svg><use href="#icon-radar"/></svg><span>CREATE MULTIPLAYER</span>
+          </button>
           <button class="primary-btn" id="launchBtn"><span>BEGIN DEPLOYMENT</span><b>→</b></button>
         </div>
       </div>
@@ -182,12 +213,26 @@
         </div>
       </div>
 
+      <section class="deployment-stage" id="deploymentStage">
+        <div class="deployment-copy">
+          <span class="stage-number">01</span>
+          <div><small>PRE-BATTLE SEQUENCE</small><strong>DEPLOY YOUR FLEET</strong><p>Select a vessel, rotate it, then place it on your defensive matrix.</p></div>
+        </div>
+        <div class="deployment-actions">
+          <button class="tool-btn" id="rotateBtn"><b>R</b><span>ROTATE SHIP</span></button>
+          <button class="tool-btn" id="clearFleetBtn"><b>×</b><span>CLEAR BOARD</span></button>
+          <button class="tool-btn" id="autoPlaceBtn"><b>↻</b><span>AUTO PLACE</span></button>
+          <button class="primary-btn ready-btn" id="readyBtn"><span>CONFIRM DEPLOYMENT</span><b>✓</b></button>
+        </div>
+        <div class="shipyard" id="shipyard"></div>
+      </section>
+
       <div class="battle-layout">
         <aside class="fleet-panel">
           <div class="panel-label"><span>01</span> YOUR FLEET</div>
           <div class="fleet-score"><strong id="ownAlive">5</strong><span>VESSELS<br>OPERATIONAL</span></div>
           <div id="fleetList" class="fleet-list"></div>
-          <button class="secondary-btn" id="redeployBtn"><span>↻</span> RANDOMIZE FLEET</button>
+          <button class="secondary-btn" id="redeployBtn"><span>↻</span> AUTO-PLACE REMAINING</button>
           <div class="intel-note">
             <svg><use href="#icon-shield"/></svg>
             <p><b>DEFENSIVE GRID</b><br>Enemy strikes are recorded here in real time.</p>
@@ -264,6 +309,66 @@
     </div>
   </div>
 
+  <div class="modal-backdrop" id="identityModal">
+    <div class="command-modal identity-modal">
+      <div class="modal-kicker">COMMANDER REGISTRATION</div>
+      <h2>WHAT SHOULD WE CALL YOU?</h2>
+      <p>Your callsign is saved on this device for future matches and battle records.</p>
+      <label class="field-label" for="usernameInput">COMMANDER CALLSIGN</label>
+      <input class="command-input" id="usernameInput" maxlength="18" autocomplete="nickname" placeholder="Enter your name" />
+      <div class="profile-record"><span>LOCAL RECORD</span><b id="identityRecord">0 WINS · 0 GAMES</b></div>
+      <button class="primary-btn modal-primary" id="saveUsernameBtn"><span>SAVE & CONTINUE</span><b>→</b></button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="customModal">
+    <div class="command-modal custom-modal">
+      <div class="modal-kicker">CUSTOM PROTOCOL</div>
+      <div class="modal-title-row"><div><h2>BUILD YOUR BATTLE</h2><p>Every player receives the exact same fleet and rules.</p></div><button class="modal-close" id="closeCustomBtn">×</button></div>
+      <div class="custom-columns">
+        <section>
+          <label class="field-label">GRID SIZE <b id="gridSizeLabel">10 × 10</b></label>
+          <input type="range" id="gridSizeInput" min="8" max="14" value="10" />
+          <div class="custom-section-title"><span>01</span> FLEET MANIFEST</div>
+          <div class="custom-fleet" id="customFleet"></div>
+        </section>
+        <section>
+          <div class="custom-section-title"><span>02</span> TACTICAL ABILITIES</div>
+          <div class="ability-toggles" id="abilityToggles"></div>
+          <div class="custom-summary">
+            <span>PROTOCOL SUMMARY</span>
+            <strong id="customSummary">10 × 10 · 5 SHIPS · 4 SYSTEMS</strong>
+            <p>Changes apply equally to both commanders.</p>
+          </div>
+        </section>
+      </div>
+      <button class="primary-btn modal-primary" id="saveCustomBtn"><span>USE THIS PROTOCOL</span><b>✓</b></button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="lobbyModal">
+    <div class="command-modal lobby-modal">
+      <button class="modal-close" id="closeLobbyBtn">×</button>
+      <div class="lobby-radar"><span></span><i></i></div>
+      <div class="modal-kicker">ENCRYPTED PEER-TO-PEER LOBBY</div>
+      <h2 id="lobbyTitle">INVITE YOUR OPPONENT</h2>
+      <p id="lobbyDescription">Share this one-time battle link. Keep this tab open while your opponent joins.</p>
+      <div class="invite-link-row" id="inviteLinkRow">
+        <input class="command-input" id="inviteLinkInput" readonly />
+        <button id="copyInviteBtn">COPY LINK</button>
+      </div>
+      <div class="lobby-player-row">
+        <div class="lobby-player ready"><span class="profile-avatar" id="localLobbyAvatar">C</span><div><small>YOU</small><b id="localLobbyName">COMMANDER</b></div><em>READY</em></div>
+        <div class="versus">VS</div>
+        <div class="lobby-player" id="remoteLobbyPlayer"><span class="profile-avatar">?</span><div><small>OPPONENT</small><b id="remoteLobbyName">WAITING...</b></div><em id="remoteLobbyStatus">OFFLINE</em></div>
+      </div>
+      <div class="lobby-protocol"><span>MATCH PROTOCOL</span><b id="lobbyProtocol">CLASSIC · 10 × 10 · 5 SHIPS</b></div>
+      <button class="primary-btn modal-primary" id="joinPlayBtn"><span>CONNECT & PLAY</span><b>→</b></button>
+      <p class="lobby-status" id="lobbyStatus">Creating secure room...</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
